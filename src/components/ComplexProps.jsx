@@ -1,24 +1,314 @@
+import { useState } from "react";
 
-const ComplexProps = ({isDark}) => {
+function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
+  // Dynamic dark theme fallback styles using rich, glowing neon-tinted dark palettes
+  const darkThemeClasses = {
+    "Mark zen":
+      "bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 border-purple-500/30 text-purple-100",
+    "Sarah Chen":
+      "bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 border-emerald-500/30 text-emerald-100",
+    "Alex Rivera":
+      "bg-gradient-to-br from-rose-950 via-slate-900 to-amber-950 border-rose-500/30 text-rose-100",
+  };
+
+  const currentDarkClass =
+    darkThemeClasses[user.name] ||
+    "bg-slate-900 border-slate-700 text-slate-100";
+
   return (
-    <div className={`p-8 rounded-2xl shadow-xl transition-all duration-300 border ${
-      isDark 
-        ? "bg-slate-900 border-slate-800" 
-        : "bg-white border-slate-100"
-    }`}>
-      <h1 className={`text-2xl font-bold tracking-tight mb-3 ${
-        isDark ? "text-slate-100" : "text-slate-900"
-      }`}>
-        Complex Props
-      </h1>
-      
-      <p className={`text-base leading-relaxed ${
-        isDark ? "text-slate-400" : "text-slate-600"
-      }`}>
-        Complex Props is in progress
-      </p>
+    <div
+      className={`p-6 rounded-3xl shadow-xl border relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col justify-between h-full group ${
+        isDarkGlobal
+          ? `${currentDarkClass}`
+          : `${theme.backgroundColor} ${theme.textColor} border-white/60`
+      }`}
+    >
+      {/* Decorative Background Glow Effect */}
+      <div
+        className={`absolute -top-16 -right-16 w-36 h-36 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-300 ${
+          user.name === "Mark zen"
+            ? "bg-purple-400"
+            : user.name === "Sarah Chen"
+              ? "bg-emerald-400"
+              : "bg-rose-400"
+        }`}
+      />
+
+      <div>
+        {/* Header: Avatar, Name & Role */}
+        <div className="flex items-center gap-4 mb-6 relative z-10">
+          <div
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-md shrink-0 transform group-hover:rotate-6 transition-transform duration-300 ${
+              isDarkGlobal
+                ? user.name === "Mark zen"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                  : user.name === "Sarah Chen"
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                    : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                : theme.avatarBg
+            }`}
+          >
+            {user.avatar}
+          </div>
+          <div className="min-w-0">
+            <h4 className="text-lg font-black tracking-tight truncate">
+              {user.name}
+            </h4>
+            <p
+              className={`text-xs font-bold tracking-wider uppercase mt-0.5 ${isDarkGlobal ? "text-slate-400" : "opacity-70"}`}
+            >
+              {user.role}
+            </p>
+          </div>
+
+          {/* Status Badge */}
+          <span
+            className={`ml-auto self-start text-[10px] font-black px-2.5 py-1 rounded-xl uppercase tracking-wider border shadow-xs ${
+              user.status === "Active"
+                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
+                : "bg-amber-500/20 text-amber-400 border-amber-500/40"
+            }`}
+          >
+            {user.status}
+          </span>
+        </div>
+
+        {/* Stats Row */}
+        {user.stats && (
+          <div
+            className={`grid grid-cols-3 gap-2 p-3.5 rounded-2xl text-center mb-6 border relative z-10 ${
+              isDarkGlobal
+                ? "bg-slate-950/40 border-slate-800/80 backdrop-blur-md"
+                : "bg-white/60 border-black/5 backdrop-blur-md"
+            }`}
+          >
+            {Object.entries(user.stats).map(([key, value]) => (
+              <div key={key} className="min-w-0">
+                <div
+                  className={`text-lg font-black tracking-tight truncate ${
+                    isDarkGlobal
+                      ? user.name === "Mark zen"
+                        ? "text-purple-300"
+                        : user.name === "Sarah Chen"
+                          ? "text-emerald-300"
+                          : "text-rose-300"
+                      : "text-slate-900"
+                  }`}
+                >
+                  {typeof value === "number" ? value.toLocaleString() : value}
+                </div>
+                <div
+                  className={`text-[10px] font-bold uppercase tracking-wider truncate mt-0.5 ${isDarkGlobal ? "text-slate-500" : "opacity-60"}`}
+                >
+                  {key}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Action Buttons Footer */}
+      {actions && (
+        <div className="grid grid-cols-2 gap-3 mt-auto relative z-10">
+          <button
+            onClick={actions.secondary.onClick}
+            className={`px-3 py-2.5 text-xs font-black rounded-xl transition-all cursor-pointer border hover:scale-[1.03] active:scale-[0.97] ${
+              isDarkGlobal
+                ? "bg-slate-900/60 hover:bg-slate-800 text-slate-300 border-slate-800"
+                : `${actions.secondary.className} border-black/5`
+            }`}
+          >
+            {actions.secondary.label}
+          </button>
+          <button
+            onClick={actions.primary.onClick}
+            className={`px-3 py-2.5 text-xs font-black rounded-xl shadow-md transition-all cursor-pointer text-center hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] ${
+              isDarkGlobal
+                ? user.name === "Mark zen"
+                  ? "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/20"
+                  : user.name === "Sarah Chen"
+                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20"
+                    : "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/20"
+                : actions.primary.className
+            }`}
+          >
+            {actions.primary.label}
+          </button>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default ComplexProps
+const ComplexProps = ({ isDark }) => {
+  const [message, setMessage] = useState(
+    "Click an action on any profile card...",
+  );
+
+  const users = [
+    {
+      user: {
+        name: "Mark zen",
+        email: "markzen@me.com",
+        avatar: "👦🏻",
+        role: "Admin",
+        status: "Active",
+        stats: {
+          posts: 145,
+          followers: 25432,
+          following: 451,
+        },
+      },
+      theme: {
+        backgroundColor:
+          "bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100",
+        textColor: "text-purple-950",
+        avatarBg: "bg-purple-200 text-purple-700 border border-purple-300",
+        badgeBg: "bg-purple-200",
+      },
+      actions: {
+        primary: {
+          label: "View Profile",
+          onClick: () => setMessage("Viewing Mark's Profile Dashboard"),
+          className:
+            "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-200 hover:from-purple-500 hover:to-indigo-500",
+        },
+        secondary: {
+          label: "Message",
+          onClick: () => setMessage("Opening encrypted channel to Mark"),
+          className: "bg-white/80 hover:bg-white text-purple-900",
+        },
+      },
+    },
+    {
+      user: {
+        name: "Sarah Chen",
+        email: "sarah.c@me.com",
+        avatar: "👩🏻‍💻",
+        role: "Developer",
+        status: "Active",
+        stats: {
+          projects: 32,
+          commits: 48921,
+          reviews: 89,
+        },
+      },
+      theme: {
+        backgroundColor:
+          "bg-gradient-to-br from-teal-100 via-emerald-50 to-cyan-100",
+        textColor: "text-emerald-950",
+        avatarBg: "bg-emerald-200 text-emerald-700 border border-emerald-300",
+        badgeBg: "bg-emerald-200",
+      },
+      actions: {
+        primary: {
+          label: "Review Code",
+          onClick: () => setMessage("Opening Sarah's active pull requests"),
+          className:
+            "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-emerald-200 hover:from-emerald-500 hover:to-teal-500",
+        },
+        secondary: {
+          label: "Sponsor",
+          onClick: () => setMessage("Opening GitHub sponsorship tiers"),
+          className: "bg-white/80 hover:bg-white text-emerald-900",
+        },
+      },
+    },
+    {
+      user: {
+        name: "Alex Rivera",
+        email: "alex.r@me.com",
+        avatar: "🎨",
+        role: "Designer",
+        status: "Away",
+        stats: {
+          designs: 89,
+          followers: 12405,
+          following: 615,
+        },
+      },
+      theme: {
+        backgroundColor:
+          "bg-gradient-to-br from-rose-100 via-orange-50 to-amber-100",
+        textColor: "text-rose-950",
+        avatarBg: "bg-rose-200 text-rose-700 border border-rose-300",
+        badgeBg: "bg-rose-200",
+      },
+      actions: {
+        primary: {
+          label: "View Portfolio",
+          onClick: () =>
+            setMessage("Opening Alex's production Figma workspace"),
+          className:
+            "bg-gradient-to-r from-rose-600 to-amber-500 text-white shadow-rose-200 hover:from-rose-500 hover:to-amber-400",
+        },
+        secondary: {
+          label: "Hire Me",
+          onClick: () => setMessage("Opening contractor dispatch interface"),
+          className: "bg-white/80 hover:bg-white text-rose-900",
+        },
+      },
+    },
+  ];
+
+  return (
+    <section
+      className={`p-8 rounded-3xl shadow-2xl border transition-colors duration-300 ${
+        isDark
+          ? "bg-slate-950 border-slate-900 text-slate-100"
+          : "bg-slate-50/50 border-slate-100 text-slate-900"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Header Block */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-black tracking-tight mb-2">
+            Complex Props & Destructuring
+          </h3>
+          <p
+            className={`text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}
+          >
+            Demonstrating advanced patterns: spreading object states (
+            <code className="font-mono text-xs px-1 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
+              {"{...userData}"}
+            </code>
+            ), custom inline style maps, and binding stateful callback loops.
+          </p>
+        </div>
+
+        {/* Global Action Logger State Banner */}
+        <div
+          className={`p-4 rounded-2xl mb-8 border font-mono text-xs flex items-center justify-between transition-all ${
+            isDark
+              ? "bg-slate-900 border-indigo-500/20 text-indigo-400 shadow-inner"
+              : "bg-indigo-50 border-indigo-100 text-indigo-700 shadow-xs"
+          }`}
+        >
+          <div className="flex items-center gap-2 truncate">
+            <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+            <span className="font-bold uppercase tracking-wider text-[10px] opacity-75">
+              Sandbox Event Log:
+            </span>
+            <span className="truncate font-semibold">{message}</span>
+          </div>
+          <button
+            onClick={() => setMessage("Click an action on any profile card...")}
+            className="text-[10px] font-black uppercase tracking-wider underline hover:opacity-80 ml-4 cursor-pointer"
+          >
+            Clear
+          </button>
+        </div>
+
+        {/* Dynamic Card Container System */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {users.map((userData, index) => (
+            <UserProfileCard key={index} {...userData} isDarkGlobal={isDark} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ComplexProps;
