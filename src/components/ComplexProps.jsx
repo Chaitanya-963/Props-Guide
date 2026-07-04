@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
-  // Rich, glowing neon-tinted dark palettes tailored to each user identity
   const darkThemeClasses = {
     "Mark zen":
       "bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 border-purple-500/30 text-purple-100",
@@ -17,13 +16,13 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
 
   return (
     <div
-      className={`p-5 sm:p-6 rounded-3xl shadow-xl border relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col justify-between h-full group ${
+      className={`p-4 sm:p-6 rounded-3xl shadow-xl border relative overflow-hidden transition-all duration-300 sm:hover:-translate-y-1.5 sm:hover:shadow-2xl flex flex-col justify-between h-full group w-full max-w-full min-w-0 ${
         isDarkGlobal
           ? `${currentDarkClass}`
           : `${theme.backgroundColor} ${theme.textColor} border-white/60`
       }`}
     >
-      {/* Decorative Background Glow Effect (Hidden on mobile to save rendering power) */}
+      {/* Decorative Background Glow Effect */}
       <div
         className={`hidden sm:block absolute -top-16 -right-16 w-36 h-36 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-300 ${
           user.name === "Mark zen"
@@ -34,36 +33,40 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
         }`}
       />
 
-      <div>
-        {/* Header: Avatar, Name & Role */}
-        <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6 relative z-10">
-          <div
-            className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-md shrink-0 transform group-hover:rotate-6 transition-transform duration-300 ${
-              isDarkGlobal
-                ? user.name === "Mark zen"
-                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                  : user.name === "Sarah Chen"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                    : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
-                : theme.avatarBg
-            }`}
-          >
-            {user.avatar}
-          </div>
-          <div className="min-w-0 flex-1">
-            <h4 className="text-base sm:text-lg font-black tracking-tight truncate">
-              {user.name}
-            </h4>
-            <p
-              className={`text-[10px] sm:text-xs font-bold tracking-wider uppercase mt-0.5 ${isDarkGlobal ? "text-slate-400" : "opacity-70"}`}
+      <div className="w-full min-w-0">
+        {/* Header Layout Zone */}
+        <div className="flex items-center justify-between gap-2.5 mb-4 sm:mb-6 relative z-10 w-full min-w-0">
+          <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 flex-1">
+            <div
+              className={`w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center text-lg sm:text-2xl shadow-md shrink-0 transform sm:group-hover:rotate-6 transition-transform duration-300 ${
+                isDarkGlobal
+                  ? user.name === "Mark zen"
+                    ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                    : user.name === "Sarah Chen"
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                      : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                  : theme.avatarBg
+              }`}
             >
-              {user.role}
-            </p>
+              {user.avatar}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm sm:text-base md:text-lg font-black tracking-tight truncate">
+                {user.name}
+              </h4>
+              <p
+                className={`text-[9px] sm:text-xs font-bold tracking-wider uppercase mt-0.5 truncate ${
+                  isDarkGlobal ? "text-slate-400" : "opacity-70"
+                }`}
+              >
+                {user.role}
+              </p>
+            </div>
           </div>
 
           {/* Status Badge */}
           <span
-            className={`text-[9px] sm:text-[10px] font-black px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-xl uppercase tracking-wider border shadow-xs shrink-0 self-center ${
+            className={`text-[8px] sm:text-[10px] font-black px-2 py-0.5 sm:py-1 rounded-lg sm:rounded-xl uppercase tracking-wider border shadow-xs shrink-0 self-center ${
               user.status === "Active"
                 ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
                 : "bg-amber-500/20 text-amber-400 border-amber-500/40"
@@ -73,19 +76,19 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
           </span>
         </div>
 
-        {/* Stats Row */}
+        {/* Numeric Statistics Layout Dashboard Grid */}
         {user.stats && (
           <div
-            className={`grid grid-cols-3 gap-1 sm:gap-2 p-3 rounded-2xl text-center mb-6 border relative z-10 ${
+            className={`grid grid-cols-3 gap-1 p-2 sm:p-3 rounded-2xl text-center mb-4 sm:mb-6 border relative z-10 w-full min-w-0 ${
               isDarkGlobal
                 ? "bg-slate-950/40 border-slate-800/80 backdrop-blur-md"
                 : "bg-white/60 border-black/5 backdrop-blur-md"
             }`}
           >
             {Object.entries(user.stats).map(([key, value]) => (
-              <div key={key} className="min-w-0 py-0.5">
+              <div key={key} className="min-w-0 py-0.5 w-full">
                 <div
-                  className={`text-sm sm:text-lg font-black tracking-tight truncate ${
+                  className={`text-xs sm:text-base md:text-lg font-black tracking-tight truncate ${
                     isDarkGlobal
                       ? user.name === "Mark zen"
                         ? "text-purple-300"
@@ -98,7 +101,9 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
                   {typeof value === "number" ? value.toLocaleString() : value}
                 </div>
                 <div
-                  className={`text-[9px] sm:text-[10px] font-bold uppercase tracking-wider truncate mt-0.5 ${isDarkGlobal ? "text-slate-500" : "opacity-60"}`}
+                  className={`text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-wider truncate mt-0.5 ${
+                    isDarkGlobal ? "text-slate-500" : "opacity-60"
+                  }`}
                 >
                   {key}
                 </div>
@@ -108,12 +113,12 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
         )}
       </div>
 
-      {/* Action Buttons Footer */}
+      {/* Interactive Primary & Secondary Action Button Zone */}
       {actions && (
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-auto relative z-10">
+        <div className="grid grid-cols-2 gap-2 mt-auto relative z-10 w-full min-w-0">
           <button
             onClick={actions.secondary.onClick}
-            className={`px-2.5 sm:px-3 py-2 sm:py-2.5 text-[11px] sm:text-xs font-black rounded-xl transition-all cursor-pointer border hover:scale-[1.02] active:scale-[0.98] truncate ${
+            className={`px-2 py-2 text-[10px] sm:text-xs font-bold rounded-xl transition-all cursor-pointer border active:scale-[0.96] truncate text-center ${
               isDarkGlobal
                 ? "bg-slate-900/60 hover:bg-slate-800 text-slate-300 border-slate-800"
                 : `${actions.secondary.className} border-black/5`
@@ -123,13 +128,13 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
           </button>
           <button
             onClick={actions.primary.onClick}
-            className={`px-2.5 sm:px-3 py-2 sm:py-2.5 text-[11px] sm:text-xs font-black rounded-xl shadow-md transition-all cursor-pointer text-center hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] truncate ${
+            className={`px-2 py-2 text-[10px] sm:text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer text-center active:scale-[0.96] truncate ${
               isDarkGlobal
                 ? user.name === "Mark zen"
-                  ? "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/20"
+                  ? "bg-purple-600 hover:bg-purple-50 text-white shadow-purple-900/20"
                   : user.name === "Sarah Chen"
-                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/20"
-                    : "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/20"
+                    ? "bg-emerald-600 hover:bg-emerald-50 text-white shadow-emerald-900/20"
+                    : "bg-rose-600 hover:bg-rose-50 text-white shadow-rose-900/20"
                 : actions.primary.className
             }`}
           >
@@ -140,7 +145,6 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
     </div>
   );
 }
-
 const ComplexProps = ({ isDark }) => {
   const [message, setMessage] = useState(
     "Click an action on any profile card...",
@@ -254,23 +258,23 @@ const ComplexProps = ({ isDark }) => {
 
   return (
     <section
-      className={`p-4 sm:p-6 md:p-8 rounded-3xl shadow-2xl border transition-colors duration-300 ${
+      className={`p-4 sm:p-6 md:p-8 rounded-3xl shadow-2xl border transition-colors duration-300 w-full max-w-full overflow-hidden ${
         isDark
-          ? "bg-slate-950 border-slate-900 text-slate-100"
+          ? "bg-slate-950 border-slate-800 text-slate-100"
           : "bg-slate-50/50 border-slate-100 text-slate-900"
       }`}
     >
-      <div className="max-w-6xl mx-auto">
-        {/* Header Block */}
-        <div className="mb-6 sm:mb-8">
-          <h3 className="text-xl sm:text-2xl font-black tracking-tight mb-2">
+      <div className="max-w-6xl mx-auto w-full">
+        {/* Header Block Layout */}
+        <div className="mb-5 sm:mb-8">
+          <h3 className="text-xl sm:text-2xl font-black tracking-tight mb-1 sm:mb-2">
             Complex Props & Destructuring
           </h3>
           <p
-            className={`text-xs sm:text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}
+            className={`text-xs sm:text-sm leading-relaxed ${isDark ? "text-slate-400" : "text-slate-600"}`}
           >
             Demonstrating advanced patterns: spreading object states (
-            <code className="font-mono text-xs px-1 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
+            <code className="font-mono text-[11px] sm:text-xs px-1 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
               {"{...userData}"}
             </code>
             ), custom inline style maps, and binding stateful callback loops.
@@ -279,16 +283,16 @@ const ComplexProps = ({ isDark }) => {
 
         {/* Global Action Logger State Banner */}
         <div
-          className={`p-3 sm:p-4 rounded-2xl mb-6 sm:mb-8 border font-mono text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 transition-all ${
+          className={`p-3 sm:p-4 rounded-2xl mb-6 sm:mb-8 border font-mono text-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 transition-all ${
             isDark
-              ? "bg-slate-900 border-indigo-500/20 text-indigo-400 shadow-inner"
+              ? "bg-slate-900/60 border-indigo-500/20 text-indigo-400 shadow-inner"
               : "bg-indigo-50 border-indigo-100 text-indigo-700 shadow-xs"
           }`}
         >
-          <div className="flex items-center gap-2 truncate w-full sm:w-auto">
+          <div className="flex items-center gap-2 truncate w-full sm:w-auto min-w-0">
             <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-            <span className="font-bold uppercase tracking-wider text-[10px] opacity-75 whitespace-nowrap">
-              Sandbox Event Log:
+            <span className="font-black uppercase tracking-wider text-[10px] opacity-75 whitespace-nowrap">
+              LOG:
             </span>
             <span className="truncate font-semibold text-[11px] sm:text-xs">
               {message}
@@ -296,14 +300,14 @@ const ComplexProps = ({ isDark }) => {
           </div>
           <button
             onClick={() => setMessage("Click an action on any profile card...")}
-            className="text-[10px] font-black uppercase tracking-wider underline hover:opacity-80 sm:ml-4 cursor-pointer self-end sm:self-auto"
+            className="text-[10px] font-black uppercase tracking-wider underline hover:opacity-80 cursor-pointer self-end sm:self-auto shrink-0 whitespace-nowrap"
           >
             Clear
           </button>
         </div>
 
         {/* Dynamic Responsive Card Container System */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
           {users.map((userData, index) => (
             <UserProfileCard key={index} {...userData} isDarkGlobal={isDark} />
           ))}
