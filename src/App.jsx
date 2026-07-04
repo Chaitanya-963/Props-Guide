@@ -99,14 +99,14 @@ function AppContent() {
           <div id="basic" className="scroll-mt-24">
             <BasicProps isDark={isDark} />
           </div>
-          <div id="ref" className="scroll-mt-24">
-            <RefProps isDark={isDark} />
-          </div>
           <div id="children" className="scroll-mt-24">
             <ChildrenProps isDark={isDark} />
           </div>
           <div id="complex" className="scroll-mt-24">
             <ComplexProps isDark={isDark} />
+          </div>
+          <div id="ref" className="scroll-mt-24">
+            <RefProps isDark={isDark} />
           </div>
           <div id="theme" className="scroll-mt-24">
             <ThemeToggler isDark={isDark} />
