@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "./ThemeToggler.jsx";
 
 function Button({
   text,
@@ -42,7 +43,9 @@ function Button({
   );
 }
 
-const BasicProps = ({ isDark }) => {
+const BasicProps = () => {
+  const { isDark } = useTheme();
+
   const [clickCount, setClickCount] = useState(0);
 
   const incrementCount = () => setClickCount((prev) => prev + 1);
@@ -107,7 +110,11 @@ const BasicProps = ({ isDark }) => {
             {/* Safe Horizon Lane: Prevents layout breaking regardless of container dimensions */}
             <div className="flex items-center gap-2.5 pt-1 overflow-x-auto pb-2 scrollbar-none sm:overflow-visible sm:pb-0 sm:flex-wrap w-full">
               <Button text="Primary" color="primary" onClick={incrementCount} />
-              <Button text="Secondary" color="secondary" onClick={incrementCount} />
+              <Button
+                text="Secondary"
+                color="secondary"
+                onClick={incrementCount}
+              />
               <Button text="Danger" color="danger" onClick={incrementCount} />
               <Button text="Success" color="success" onClick={incrementCount} />
             </div>
@@ -134,8 +141,16 @@ const BasicProps = ({ isDark }) => {
                   State: Active (Scale Test)
                 </div>
                 <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none sm:overflow-visible sm:pb-0 sm:flex-wrap w-full mt-auto">
-                  <Button text="Click Active" color="primary" onClick={incrementCount} />
-                  <Button text="Danger Active" color="danger" onClick={incrementCount} />
+                  <Button
+                    text="Click Active"
+                    color="primary"
+                    onClick={incrementCount}
+                  />
+                  <Button
+                    text="Danger Active"
+                    color="danger"
+                    onClick={incrementCount}
+                  />
                 </div>
               </div>
 
@@ -151,8 +166,18 @@ const BasicProps = ({ isDark }) => {
                   State: Disabled (Isolated)
                 </div>
                 <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none sm:overflow-visible sm:pb-0 sm:flex-wrap w-full mt-auto">
-                  <Button text="Primary Disabled" color="primary" disabled={true} onClick={incrementCount} />
-                  <Button text="Danger Disabled" color="danger" disabled={true} onClick={incrementCount} />
+                  <Button
+                    text="Primary Disabled"
+                    color="primary"
+                    disabled={true}
+                    onClick={incrementCount}
+                  />
+                  <Button
+                    text="Danger Disabled"
+                    color="danger"
+                    disabled={true}
+                    onClick={incrementCount}
+                  />
                 </div>
               </div>
             </div>

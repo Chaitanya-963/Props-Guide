@@ -1,6 +1,9 @@
 import { useRef, forwardRef, useState } from "react";
+import { useTheme } from "./ThemeToggler.jsx"; 
 
-const CustomInput = forwardRef(({ label, placeholder, className, isDark }, ref) => {
+
+const CustomInput = forwardRef(({ label, placeholder, className }, ref) => {
+  const { isDark } = useTheme();
   return (
     <div className="w-full min-w-0">
       <label 
@@ -26,7 +29,8 @@ const CustomInput = forwardRef(({ label, placeholder, className, isDark }, ref) 
 
 CustomInput.displayName = "CustomInput";
 
-const RefProps = ({ isDark }) => {
+const RefProps = () => {
+  const { isDark } = useTheme();
   const inputRef = useRef(null);
   const secondInputRef = useRef(null);
   const [logMessage, setLogMessage] = useState("Interact with input controls to log actions...");

@@ -2,33 +2,72 @@ import BasicProps from "./components/BasicProps.jsx";
 import RefProps from "./components/RefProps.jsx";
 import ChildrenProps from "./components/ChildrenProps.jsx";
 import ComplexProps from "./components/ComplexProps.jsx";
-import ThemeToggler from "./components/ThemeToggler.jsx";
+import ThemeToggler, {
+  ThemeProvider,
+  useTheme,
+} from "./components/ThemeToggler.jsx";
 import { useEffect, useState } from "react";
 
-function Navigation() {
+function Navigation({ activeSection, setActiveSection }) {
+  const { isDark } = useTheme();
+
   const sections = [
     { id: "basic", label: "Basic Props", icon: "📦" },
-    { id: "ref", label: "Ref Props", icon: "🔗" },
     { id: "children", label: "Children Props", icon: "👦🏻" },
     { id: "complex", label: "Complex Props", icon: "🧩" },
+    { id: "ref", label: "Ref Props", icon: "🔗" },
     { id: "theme", label: "Theme Toggler", icon: "🎨" },
   ];
 
+  // Smooth scroll handler when a navigation link is clicked
+  const handleNavClick = (id) => {
+    setActiveSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <nav className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-600 text-slate-800 shadow-md">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16 overflow-x-auto gap-2 scrollbar-none">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap text-slate-100 hover:bg-slate-50 hover:text-indigo-600 active:bg-slate-100 transition-all duration-200"
-            >
-              <span className="text-base" role="img" aria-label={section.label}>
-                {section.icon}
-              </span>
-              {section.label}
-            </button>
-          ))}
+    <nav
+      className={`fixed top-0 left-0 z-50 backdrop-blur-md border-b transition-all duration-300 shadow-md w-full ${
+        isDark
+          ? "bg-slate-900/80 border-slate-800 text-slate-100"
+          : "bg-white/80 border-slate-200 text-slate-800"
+      }`}
+    >
+      {/* Changed max-w-6xl to w-full to span the complete edge-to-edge width of the browser */}
+      <div className="w-full px-4">
+        {/* Switched from a flex row container to a grid layout with exactly 5 equal columns */}
+        <div className="grid grid-cols-5 items-center h-16 gap-2">
+          {sections.map((section) => {
+            const isActive = activeSection === section.id;
+            return (
+              <button
+                key={section.id}
+                onClick={() => handleNavClick(section.id)}
+                className={`flex items-center justify-center gap-2 px-2 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer w-full text-center ${
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                    : isDark
+                      ? "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                <span
+                  className="text-base shrink-0"
+                  role="img"
+                  aria-label={section.label}
+                >
+                  {section.icon}
+                </span>
+                {/* Hidden text completely on tiny mobile screens to avoid ugly wrapping inside tight grids */}
+                <span className="hidden md:inline truncate">
+                  {section.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </nav>
@@ -36,10 +75,9 @@ function Navigation() {
 }
 
 function AppContent() {
-  const [isDark, setIsDark] = useState(true);
+  const { isDark } = useTheme();
   const [activeSection, setActiveSection] = useState("basic");
 
-  // Automatically update active nav button based on window scroll position
   useEffect(() => {
     const handleObserver = (entries) => {
       entries.forEach((entry) => {
@@ -51,7 +89,7 @@ function AppContent() {
 
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: "-20% 0px -60% 0px", // Triggers when element occupies mid-screen
+      rootMargin: "-20% 0px -60% 0px", 
     });
 
     const targetIds = ["basic", "children", "complex", "ref", "theme"];
@@ -71,20 +109,17 @@ function AppContent() {
           : "bg-slate-50 text-slate-800 selection:bg-indigo-600 selection:text-white"
       }`}
     >
-      <Navigation 
-        isDark={isDark} 
-        activeSection={activeSection} 
-        setActiveSection={setActiveSection} 
+      <Navigation
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
       />
 
-      {/* Outer padding transitions smoothly from small viewports to desktop frames */}
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10 sm:py-16">
         <header
           className={`relative border-b pb-8 sm:pb-10 mb-8 sm:mb-12 transition-colors duration-300 ${
             isDark ? "border-slate-800" : "border-slate-200"
           }`}
         >
-          {/* Decorative ambient background glows - Disabled on tiny screens to optimize memory performance */}
           <div
             className={`absolute -top-20 -left-20 w-48 h-48 sm:w-72 sm:h-72 rounded-full blur-3xl pointer-events-none transition-opacity duration-300 ${
               isDark
@@ -93,20 +128,20 @@ function AppContent() {
             }`}
           />
 
-          <div className="flex items-center gap-3 mb-3 sm:mb-4">
+          <div className="flex items-center gap-3 mb-3 pt-14 sm:mb-4">
             <span
               className={`px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold tracking-wider rounded-full uppercase border transition-all duration-300 ${
                 isDark
                   ? "text-indigo-400 bg-indigo-500/10 border-indigo-500/20"
                   : "text-indigo-600 bg-indigo-50 border-indigo-200"
-                }`}
+              }`}
             >
               Core Concept
             </span>
           </div>
 
           <h1
-            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-3 sm:mb-4 bg-linear-to-r bg-clip-text text-transparent transition-all duration-300 ${
+            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-3 sm:mb-4 bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300 ${
               isDark
                 ? "from-white via-slate-200 to-slate-400"
                 : "from-slate-900 via-slate-800 to-slate-600"
@@ -125,22 +160,21 @@ function AppContent() {
           </p>
         </header>
 
-        {/* Responsive Grid Layout Container */}
         <main className="grid gap-10 sm:gap-16 w-full max-w-full overflow-hidden">
           <div id="basic" className="scroll-mt-20 sm:scroll-mt-24 w-full">
-            <BasicProps isDark={isDark} />
+            <BasicProps />
           </div>
           <div id="children" className="scroll-mt-20 sm:scroll-mt-24 w-full">
-            <ChildrenProps isDark={isDark} />
+            <ChildrenProps />
           </div>
           <div id="complex" className="scroll-mt-20 sm:scroll-mt-24 w-full">
-            <ComplexProps isDark={isDark} />
+            <ComplexProps />
           </div>
           <div id="ref" className="scroll-mt-20 sm:scroll-mt-24 w-full">
-            <RefProps isDark={isDark} />
+            <RefProps />
           </div>
           <div id="theme" className="scroll-mt-20 sm:scroll-mt-24 w-full">
-            <ThemeToggler isDark={isDark} setIsDark={setIsDark} />
+            <ThemeToggler />
           </div>
         </main>
       </div>
@@ -165,8 +199,10 @@ function AppContent() {
   );
 }
 
-function App() {
-  return <AppContent />;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
 }
-
-export default App;

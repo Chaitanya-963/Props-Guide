@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useTheme } from "./ThemeToggler.jsx";
 
-function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
+function UserProfileCard({ user, theme, actions }) {
+  const { isDark: isDarkGlobal } = useTheme();
   const darkThemeClasses = {
     "Mark zen":
       "bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 border-purple-500/30 text-purple-100",
@@ -145,7 +147,8 @@ function UserProfileCard({ user, theme, actions, isDarkGlobal }) {
     </div>
   );
 }
-const ComplexProps = ({ isDark }) => {
+const ComplexProps = () => {
+  const { isDark } = useTheme();
   const [message, setMessage] = useState(
     "Click an action on any profile card...",
   );

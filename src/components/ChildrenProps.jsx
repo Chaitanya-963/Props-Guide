@@ -1,4 +1,9 @@
-function Card({ children, title, color = "blue", isDark = true }) {
+import { useTheme } from "./ThemeToggler.jsx"; 
+
+
+
+function Card({ children, title, color = "blue", }) {
+  const { isDark } = useTheme();
   const colorClasses = {
     blue: isDark
       ? "border-blue-500 bg-blue-950/20 text-blue-200"
@@ -56,7 +61,8 @@ function Container({ children, layout = "vertical" }) {
   );
 }
 
-const ChildrenProps = ({ isDark = true }) => {
+const ChildrenProps = () => {
+  const { isDark } = useTheme();
   return (
     <section
       className={`p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl transition-all duration-300 border w-full max-w-full overflow-hidden ${
